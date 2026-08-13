@@ -199,6 +199,10 @@ st.header("<월별 분석>")
 col1, col2 = st.columns(2)
 
 # col1 :월별 불량률 꺾은선 그래프
+
+mean_failure_rate = monthly_counts["FailureRate"].mean()
+
+
 with col1 :
     st.subheader("월별 불량률")
     st.subheader("    ")
@@ -216,6 +220,23 @@ with col1 :
     ax.set_ylabel("불량률")
 
     ax.set_title("월별 불량률")
+
+    ax.axhline(
+    mean_failure_rate,
+    linestyle="--",
+    linewidth=1.5
+)
+
+    # 평균값 표시
+    ax.text(
+         1.0,
+         mean_failure_rate,
+         f"평균 {mean_failure_rate:.1%}",
+         transform=ax.get_yaxis_transform(),
+         ha="left",
+         va="bottom",
+         fontsize=12
+    )
     ax.grid(True)
 
     st.pyplot(fig)
