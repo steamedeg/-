@@ -15,9 +15,6 @@ font_name = fm.FontProperties(fname=font_path).get_name()
 plt.rcParams["font.family"] = font_name
 plt.rcParams["axes.unicode_minus"] = False
 
-st.write(font_name)
-st.write(fm.findfont(font_name))
-
 # 1. 데이터 로드 (Kaggle SECOM 데이터셋)
 # secom.csv 에는 590개의 센서 데이터가 들어있음
 data = pd.read_csv('uci-secom.csv')
@@ -282,7 +279,7 @@ with col2 :
 
 #  아래쪽~~
 
-st.subheader("전기간 불량 의심 센서 Top 3")
+st.subheader("전기간 불량 의심 센서 Top 6")
 
 fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -324,6 +321,16 @@ for ax, sensor in zip(axes, top3_sensors):
         ax.hlines(Q2, i - 0.5, i + 0.5, color="#ff9d80",linewidth=2.5)
         ax.hlines(Q3, i - 0.3, i + 0.3, color="#ff9d80", linewidth=1.5)
 
+    pfdiff = X_top30_summary.loc[sensor, "PFDiff"]
+    
+    ax.text(
+        0.97, 0.95,
+        f"PFDiff = {pfdiff:.3f}\np < 0.05",
+        transform=ax.transAxes,
+        ha="right",
+        va="top",
+        fontsize=9
+    )
     ax.set_title(f"Sensor {sensor}", fontsize=15)
     ax.set_xlabel("")
     ax.set_ylabel("센서값", fontsize=16)
@@ -332,8 +339,6 @@ for ax, sensor in zip(axes, top3_sensors):
 plt.tight_layout()
 
 st.pyplot(fig)
-
-st.subheader("전기간 불량 의심 센서 Top 3")
 
 fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -375,6 +380,16 @@ for ax, sensor in zip(axes, top6_sensors):
         ax.hlines(Q2, i - 0.5, i + 0.5, color="#383b37",linewidth=2.5)
         ax.hlines(Q3, i - 0.3, i + 0.3, color="#383b37", linewidth=1.5)
 
+    pfdiff = X_top30_summary.loc[sensor, "PFDiff"]
+        
+    ax.text(
+            0.97, 0.95,
+            f"PFDiff = {pfdiff:.3f}\np < 0.05",
+            transform=ax.transAxes,
+            ha="right",
+            va="top",
+            fontsize=9
+        )
     ax.set_title(f"Sensor {sensor}", fontsize=15)
     ax.set_xlabel("")
     ax.set_ylabel("센서값", fontsize=16)
@@ -385,4 +400,4 @@ plt.tight_layout()
 st.pyplot(fig)
 
 st.subheader(" ")
-st.dataframe(X_top30_summary.head())
+st.dataframe(X_top30_summary.head(6))
