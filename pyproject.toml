@@ -1,0 +1,27 @@
+[project]
+name = "project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "steamedeg", email = "steamedeg@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "imbalanced-learn>=0.14.2",
+    "koreanize-matplotlib>=0.1.1",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "pandas>=3.0.5",
+    "scikit-learn>=1.9.0",
+    "seaborn>=0.13.2",
+    "streamlit>=1.61.1",
+    "xgboost>=3.4.0",
+]
+
+[project.scripts]
+project = "project:main"
+
+[build-system]
+requires = ["uv_build>=0.12.2,<0.13.0"]
+build-backend = "uv_build"
