@@ -3,9 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-import koreanize_matplotlib
+import matplotlib.font_manager as fm
 
-# plt.rcParams['font.family'] = 'Malgun Gothic'
+font_path = "fonts/Pretendard-SemiBold.ttf"
+
+font = fm.FontProperties(fname=font_path)
+
+plt.rcParams["font.family"] = font.get_name()
 plt.rcParams['axes.unicode_minus'] = False
 
 
