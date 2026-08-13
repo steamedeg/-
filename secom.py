@@ -258,7 +258,7 @@ with col2 :
             ax.barh(
                 result["Rank"],
                 result["PFDiff"],
-                color="#a399de"
+                color="#f7b0ab"
             )
 
             ax.set_yticks(result["Rank"])
@@ -329,7 +329,7 @@ for ax, sensor in zip(axes, top3_sensors):
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=9
+        fontsize=12
     )
     ax.set_title(f"Sensor {sensor}", fontsize=15)
     ax.set_xlabel("")
@@ -388,7 +388,7 @@ for ax, sensor in zip(axes, top6_sensors):
             transform=ax.transAxes,
             ha="right",
             va="top",
-            fontsize=9
+            fontsize=12
         )
     ax.set_title(f"Sensor {sensor}", fontsize=15)
     ax.set_xlabel("")
