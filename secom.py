@@ -7,11 +7,15 @@ import matplotlib.font_manager as fm
 
 font_path = "fonts/Pretendard-SemiBold.ttf"
 
-font = fm.FontProperties(fname=font_path)
+fm.fontManager.addfont(font_path)
 
-plt.rcParams["font.family"] = font.get_name()
-plt.rcParams['axes.unicode_minus'] = False
+font_name = fm.FontProperties(fname=font_path).get_name()
 
+plt.rcParams["font.family"] = font_name
+plt.rcParams["axes.unicode_minus"] = False
+
+st.write(font_name)
+st.write(fm.findfont(font_name))
 
 # 1. 데이터 로드 (Kaggle SECOM 데이터셋)
 # secom.csv 에는 590개의 센서 데이터가 들어있음
