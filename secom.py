@@ -231,7 +231,7 @@ with col1 :
     ax.text(
          1.0,
          mean_failure_rate,
-         f"평균 {mean_failure_rate:.1%}",
+         f"평균 {mean_failure_rate/100:.1%}",
          transform=ax.get_yaxis_transform(),
          ha="left",
          va="bottom",
