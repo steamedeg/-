@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 import matplotlib.font_manager as fm
+from scipy.stats import ttest_ind
 
 font_path = "fonts/Pretendard-SemiBold.ttf"
 
@@ -106,6 +107,22 @@ for sensor in X_top30.columns :
 
   X_top30_filtered[sensor] = X_top30[sensor].where((lower<=X_top30[sensor])&(X_top30[sensor]<=upper), np.nan)
 
+p_values = []
+
+for sensor in X_top30_summary.index:
+
+    pass_values = X.loc[y == 0, sensor]
+    fail_values = X.loc[y == 1, sensor]
+
+    t_stat, p_value = ttest_ind(
+        pass_values,
+        fail_values,
+        equal_var=False
+    )
+
+    p_values.append(p_value)
+
+X_top30_summary["p_value"] = p_values
 
 # 월별 불량 및 정상 건수 집계하는 monthly_count 만들기
 monthly_counts = data.groupby('Month')['Pass/Fail'].value_counts().unstack(fill_value=0)
@@ -177,10 +194,10 @@ monthly_sensor_summary = pd.concat(
 
 ##### 여기부터 streamlit 구현
 
-st.title("XX공장 센서 데이터 기반 불량 현황 분석")
+st.title("XX공장 공정 데이터 기반 불량 분석")
 st.caption("캡션 추가")
 
-st.header("월별 분석")
+st.header("<월별 분석>")
 
 col1, col2 = st.columns(2)
 
@@ -306,6 +323,57 @@ for ax, sensor in zip(axes, top3_sensors):
         ax.hlines(Q1, i - 0.3, i + 0.3, color="#ff9d80", linewidth=1.5)
         ax.hlines(Q2, i - 0.5, i + 0.5, color="#ff9d80",linewidth=2.5)
         ax.hlines(Q3, i - 0.3, i + 0.3, color="#ff9d80", linewidth=1.5)
+
+    ax.set_title(f"Sensor {sensor}", fontsize=15)
+    ax.set_xlabel("")
+    ax.set_ylabel("센서값", fontsize=16)
+    ax.tick_params(axis='x', labelsize=20, color='#db1616')
+
+plt.tight_layout()
+
+st.pyplot(fig)
+
+st.subheader("전기간 불량 의심 센서 Top 3")
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+top6_sensors = X_top30_summary.iloc[3:6].index
+
+for ax, sensor in zip(axes, top6_sensors):
+
+    pass_data = X_top30_filtered.loc[y == 0, sensor].dropna()
+    fail_data = X_top30_filtered.loc[y == 1, sensor].dropna()
+
+    plot_data = pd.DataFrame({
+        "Value": pd.concat([pass_data, fail_data]),
+        "Group": (
+            ["Pass"] * len(pass_data)
+            + ["Fail"] * len(fail_data)
+        )
+    })
+
+    sns.violinplot(
+        data=plot_data,
+        x="Group",
+        y="Value",
+        inner=None,
+        color="#bff5f3",
+        ax=ax
+    )
+
+    for i, group in enumerate(["Pass", "Fail"]):
+
+        group_data = plot_data.loc[
+            plot_data["Group"] == group, "Value"
+        ]
+
+        Q1 = group_data.quantile(0.25)
+        Q2 = group_data.quantile(0.50)
+        Q3 = group_data.quantile(0.75)
+
+        ax.hlines(Q1, i - 0.3, i + 0.3, color="#383b37", linewidth=1.5)
+        ax.hlines(Q2, i - 0.5, i + 0.5, color="#383b37",linewidth=2.5)
+        ax.hlines(Q3, i - 0.3, i + 0.3, color="#383b37", linewidth=1.5)
 
     ax.set_title(f"Sensor {sensor}", fontsize=15)
     ax.set_xlabel("")
